@@ -16,5 +16,7 @@ Built with ☕, patience, and lots of trial-and-error.
 
 
 1.Simply pull/download Wi-Fi_Autologin-1.html and open wifi and connect to collage wifi and as it shows Action required to login to wifi.
+
 2.Just open/run the file Wi-Fi_Autologin-1.html and fill credential and connect.
+
 3.Next time when you want to connect to wifi just open/run Wi-Fi_Autologin-1.html it will handle all things by it's own.
