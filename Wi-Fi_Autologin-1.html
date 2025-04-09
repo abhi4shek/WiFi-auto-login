@@ -1,0 +1,236 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>College WiFi Auto Login 🚀</title>
+  <style>
+    body {
+      font-family: "Comic Sans MS", cursive, sans-serif;
+      background: linear-gradient(to right, #ffecd2, #fcb69f);
+      color: #333;
+      text-align: center;
+      padding: 3em;
+    }
+
+    .container {
+      background: white;
+      padding: 2em;
+      border-radius: 20px;
+      max-width: 500px;
+      margin: auto;
+      box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+    }
+
+    button {
+      background: #00c9a7;
+      border: none;
+      padding: 1em 2em;
+      font-size: 1.2em;
+      border-radius: 8px;
+      cursor: pointer;
+      color: white;
+      margin-top: 1em;
+      transition: 0.3s ease;
+    }
+
+    button:hover {
+      background: #00b89f;
+      transform: scale(1.05);
+    }
+
+    #status {
+      margin-top: 1.5em;
+      font-size: 1.1em;
+      color: #444;
+    }
+
+    footer {
+      margin-top: 2em;
+      font-size: 0.9em;
+      color: #777;
+      border-top: 1px dashed #aaa;
+      padding-top: 1em;
+    }
+
+    .input-group {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      align-items: center;
+      margin-bottom: 15px;
+    }
+
+    .input-field {
+      width: 70%;
+      padding: 10px;
+      font-size: 1em;
+      border: 2px solid #ccc;
+      border-radius: 8px;
+      outline: none;
+      transition: border-color 0.3s, box-shadow 0.3s;
+    }
+
+    .input-field:focus {
+      border-color: #00c9a7;
+      box-shadow: 0 0 5px rgba(0, 201, 167, 0.5);
+    }
+
+    .input-field:hover {
+      border-color: #00b89f;
+    }
+  </style>
+</head>
+
+<body>
+  <div class="container">
+    <h1>📡 College WiFi Auto Login</h1>
+    <p class="sub">Made with ☕, 😤, and a broken connection</p>
+
+    <div class="input-group">
+      <input type="text" id="username" placeholder="User ID" class="input-field" />
+      <input type="password" id="password" placeholder="Password" class="input-field" />
+    </div>
+
+    <button id="btnConnect">🔌 Connect to Internet</button>
+    <p id="status">💤 Waiting for action...</p>
+
+    <footer>
+      <p>🔒 Stay connected, stay caffeinated ☕</p>
+    </footer>
+  </div>
+
+  <script>// Get elements
+    const usernameInput = document.getElementById("username");
+    const passwordInput = document.getElementById("password");
+    const btn = document.getElementById("btnConnect");
+    const statusEl = document.getElementById("status");
+
+    // Load saved credentials
+    let username = localStorage.getItem("wifi_username") || "";
+    let password = localStorage.getItem("wifi_password") || "";
+    const loginUrl = "http://172.16.0.1:8090/login.xml";
+
+    // Fill saved values if available
+    if (username) usernameInput.value = username;
+    if (password) passwordInput.value = password;
+
+    const bgAudio = new Audio("https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3");
+    bgAudio.loop = false;
+    bgAudio.volume = 0.3;
+
+    // Connect button action
+    btn.addEventListener("click", async () => {
+      username = usernameInput.value.trim();
+      password = passwordInput.value.trim();
+
+      if (!username || !password) {
+        statusEl.textContent = "⚠️ Username or password missing.";
+        return;
+      }
+
+      // Save credentials
+      localStorage.setItem("wifi_username", username);
+      localStorage.setItem("wifi_password", password);
+
+      await runAutoLogin();
+    });
+
+    // Auto-run login if credentials exist
+    if (username && password) {
+      runAutoLogin();
+    }
+
+    // Main login logic
+    async function runAutoLogin() {
+      statusEl.textContent = "🛰️ Checking internet...";
+
+      bgAudio.pause();
+      bgAudio.currentTime = 0;
+
+      const internet = await isInternetAvailable();
+      if (internet) {
+        statusEl.textContent = "✅ Internet is already connected!";
+        return;
+      }
+
+      statusEl.textContent = "🤞 Logging in... fingers crossed!";
+      const success = await loginToWiFi();
+
+      if (success) {
+        statusEl.textContent = "🎉 Connected! Time to binge memes.";
+        bgAudio.play();
+        setTimeout(() => bgAudio.pause(), 2000);
+      } else {
+        statusEl.textContent = "💀 Login failed. Check your vibes or credentials.";
+      }
+    }
+
+    // Check internet status
+    async function isInternetAvailable() {
+      try {
+        const res = await fetch("https://www.google.com", { mode: "no-cors" });
+        return res.ok || res.type === "opaque";
+      } catch {
+        return false;
+      }
+    }
+
+    // Keep session alive
+    let keepAliveTimer = null;
+
+    function startKeepAlive() {
+      if (keepAliveTimer) return; // Prevent multiple loops
+
+      const sendPing = async () => {
+        const url = `http://172.16.0.1:8090/live?mode=192&username=${encodeURIComponent(username)}&a=${Date.now()}&producttype=0`;
+
+        try {
+          await fetch(url, { mode: "no-cors" });
+          // console.log("📡 Keep-alive ping sent @", new Date().toLocaleTimeString());
+        } catch (err) {
+          console.warn("⚠️ Keep-alive ping failed. Probably disconnected:", err.message);
+          statusEl.textContent = "⚠️ Disconnected. Trying to reconnect in 10s...";
+
+          setTimeout(() => {
+            runAutoLogin();
+          }, 10000); // 10 second wait
+        }
+
+        // Schedule next ping after 3 minutes
+        keepAliveTimer = setTimeout(sendPing, 180000); // 3 min
+      };
+
+      sendPing(); // Start the loop
+    }
+
+
+    // Login request
+    async function loginToWiFi() {
+      try {
+        const data = new URLSearchParams({
+          mode: "191",
+          username,
+          password,
+          a: Date.now().toString(),
+          producttype: "0"
+        });
+
+        await fetch(loginUrl, {
+          method: "POST",
+          mode: "no-cors",
+          body: data
+        });
+
+        startKeepAlive();
+        // console.log("✅ Login request sent. Assuming success.");
+        return true;
+      } catch {
+        return false;
+      }
+    }
+  </script>
+</body>
+
+</html>
