@@ -1,5 +1,5 @@
 # WiFi-auto-login
-Introducing the new & improved version of my College WiFi Auto-Login project:
+Introducing the new & improved version of my College WiFi Auto-Login portal:
 
 ->Desktop-first UI with a sleek, minimal design.
 
