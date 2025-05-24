@@ -1,22 +1,47 @@
-# WiFi-auto-login
-Introducing the new & improved version of my College WiFi Auto-Login portal:
+📶 WiFi Auto-Login Portal
 
-->Desktop-first UI with a sleek, minimal design.
+A sleek, reliable auto-login tool for college WiFi networks — no libraries, no extensions, just a single HTML file that keeps you connected without interruptions.
 
-->Better session handling with a cleaner keep-alive logic.
+✨ Features
 
-->Local credential storage with auto-reconnect.
+    💻 Desktop-first UI with a clean, minimal design
 
-->Built entirely in vanilla HTML + JS, no libraries needed.
+    🔄 Auto-reconnect & keep-alive logic
 
-Just plug in your credentials, and it keeps you online — no more interruptions!
+    🔐 Local credential storage (browser-based)
 
-I created this with real-world student pain in mind: flaky campus WiFi, login loops, and time wasted.
-Built with ☕, patience, and lots of trial-and-error.
+    🚫 No external dependencies — pure vanilla HTML + JavaScript
 
+    🎯 Designed for real-world student pain points:
 
-1.Simply pull/download Wi-Fi_Autologin-1.html and open wifi and connect to collage wifi and as it shows Action required to login to wifi.
+        Flaky campus WiFi
 
-2.Just open/run the file Wi-Fi_Autologin-1.html and fill credential and connect.
+        Constant login loops
 
-3.Next time when you want to connect to wifi just open/run Wi-Fi_Autologin-1.html it will handle all things by it's own.
+        Time-wasting manual logins
+
+⚙️ How to Use
+
+    📥 Download or clone this repository.
+
+    📡 Connect to your college WiFi. If it says “Action Required,” you're ready.
+
+    🌐 Open Wi-Fi_Autologin-1.html in any desktop browser.
+
+    🧾 Enter your credentials and click “Connect”.
+
+    ✅ That’s it! It will automatically keep your session alive.
+
+    🚀 Next time, just open the same HTML file — no need to re-enter anything.
+
+🖼️ Screenshot
+
+WiFi Auto Login UI
+Minimal, focused UI for seamless WiFi login experience.
+![Image](https://github.com/user-attachments/assets/64959b8b-b466-449f-ae17-a288312c033d)
+
+🛠️ Built With
+
+    ✅ HTML
+
+    ✅ Vanilla JavaScript
